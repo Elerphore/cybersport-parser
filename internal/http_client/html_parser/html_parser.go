@@ -1,46 +1,44 @@
 package htmlparser
 
 import (
-	"fmt"
 	"io"
 	"log"
+	"slices"
 	"strings"
 
 	"golang.org/x/net/html"
 )
 
-func traverseChildren(n *html.Node) {
-
+func traverseChildren(n *html.Node, news *News) {
 	if n.Data == "a" && n.Type == html.ElementNode && strings.Contains(n.Attr[1].Val, "link") {
-		fmt.Println(n.Data, n.Attr[0].Val)
-	}
-
-	if n.Data == "h3" && n.Type == html.ElementNode {
-		fmt.Println(n.Data, n.Attr)
+		news.PostURL = n.Attr[0].Val
 	}
 
 	if n.Type == html.TextNode && n.Parent.Data == "h3" {
-		fmt.Println(n.Data, n.Attr)
+		news.Title = n.Data
 	}
 
 	if n.Data == "img" && n.Type == html.ElementNode {
-		fmt.Println(n.Data, n.Attr[0].Val, "\n")
+		news.ImageURL = n.Attr[0].Val
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		traverseChildren(c)
+		traverseChildren(c, news)
 	}
 }
 
-func Traverse(doc *html.Node) {
+func Traverse(doc *html.Node, newsList *[]News) {
 	if doc.Data == "article" {
-		traverseChildren(doc)
+		var news = News{}
+
+		traverseChildren(doc, &news)
+
+		*newsList = slices.Insert(*newsList, len(*newsList), news)
 	}
 
 	for c := doc.FirstChild; c != nil; c = c.NextSibling {
-		Traverse(c)
+		Traverse(c, newsList)
 	}
-
 }
 
 func ParseHTML(body io.ReadCloser) (parsedHTML *html.Node) {
@@ -51,4 +49,10 @@ func ParseHTML(body io.ReadCloser) (parsedHTML *html.Node) {
 	}
 
 	return
+}
+
+type News struct {
+	Title    string
+	PostURL  string
+	ImageURL string
 }
