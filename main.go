@@ -1,24 +1,18 @@
 package main
 
 import (
-	httpclient "elerphore/cybersport-parser/internal/http_client"
-	htmlparser "elerphore/cybersport-parser/internal/http_client/html_parser"
-	"fmt"
+	"elerphore/cybersport-parser/internal/scheduler"
+	"log"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	var resp = httpclient.DoGET()
+	err := godotenv.Load(".env")
 
-	if resp.Body != nil {
-		defer resp.Body.Close()
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	var doc = htmlparser.ParseHTML(resp.Body)
-
-	var newsList = []htmlparser.News{}
-	htmlparser.Traverse(doc, &newsList)
-
-	for _, item := range newsList {
-		fmt.Println(item, "\n\n")
-	}
+	scheduler.StatTask()
 }
