@@ -9,7 +9,7 @@ import (
 )
 
 func StatTask() {
-	var task = schedule.Every(10*time.Minute, func() bool {
+	var task = schedule.Every(1*time.Minute, func() bool {
 		cybersport.GetNews()
 
 		return true

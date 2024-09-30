@@ -13,9 +13,8 @@ import (
 )
 
 var (
-	cybersportUrl     string = "https://www.cybersport.ru"
-	discordWebhookURL string = os.Getenv("DISCORD_WEBHOOK")
-	httpClient               = http.Client{}
+	cybersportUrl string = "https://www.cybersport.ru"
+	httpClient           = http.Client{}
 )
 
 func DoGET() (resp *http.Response) {
@@ -53,15 +52,13 @@ func DoDiscordRequest(news htmlparser.News) {
 
 	message_body_bytes, err_bytes := json.Marshal(discordWebhookMessage)
 
-	fmt.Println("!!!")
 	fmt.Println(string(message_body_bytes))
-	fmt.Println("!!!")
 
 	if err_bytes != nil {
 		log.Fatal(err_bytes)
 	}
 
-	request, errRequest := http.NewRequest("POST", discordWebhookURL, bytes.NewBuffer(message_body_bytes))
+	request, errRequest := http.NewRequest("POST", os.Getenv("WEBHOOK"), bytes.NewBuffer(message_body_bytes))
 	request.Header.Add("Content-Type", "application/json")
 
 	if errRequest != nil {
