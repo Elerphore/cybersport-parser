@@ -1,10 +1,10 @@
 module elerphore/cybersport-parser
 
-go 1.21.1
+go 1.25.0
 
 require (
-	atomicgo.dev/schedule v0.1.0 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/mattn/go-sqlite3 v1.14.23 // indirect
-	golang.org/x/net v0.29.0 // indirect
+	atomicgo.dev/schedule v0.1.0
+	github.com/joho/godotenv v1.5.1
+	github.com/mattn/go-sqlite3 v1.14.23
+	golang.org/x/net v0.55.0
 )
